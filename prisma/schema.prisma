@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//Criar uma migration: yarn prisma migrate dev (comando no cmd)
+model User { //Sempre a primeira letra do nosso model será uma letra maiúscula e por convencao será no singular
+  id String @id @default(uuid()) //Por padrao irá gerar um id aleatório através do uuid
+  name String
+  email String
+  password String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("users") //Por convencao sempre iremos mapear nossa categoria no plurar
+}
+
+
+model Category{
+  id String @id @default(uuid())
+  name String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("categories")
+  products Product[] //Aqui estamos relacionando o nosso produto (model abaixo) com a nossa categoria, porque uma categoria pode ter vários produtos (exemplo bebidas: coca, água, cerveja...). Perceba que "products" é o nome no qual a gente mapeou a categoria Product
+}
+
+model Product{
+  id String @id @default(uuid())
+  name String
+  price String
+  description String
+  banner String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  category Category @relation(fields: [category_id], references: [id]) //Aqui estamos relacionando. "category_id" foi o nome que nós criamos agora
+
+  @@map("products")
+
+  category_id String //Porque category_id, porque por exemplo: o produto é coca cola e a category_id dele é bebidas. Lá em cima no Category tem um id e será o mesmo id do category_id, estarao linkadas.
+  items Item[]
+}
+
+model Order{
+  id String @id @default(uuid())
+  table Int
+  status Boolean @default(false) //@default(false) nos diz que: sempre que abrirmos um pedido o status dele sempre começará por padrao como falso
+  draft Boolean @default(true) //Aqui é o rascunho do nosso pedido. Iremos fazer o seguinte: Inicializamos o pedido o status dele começa como falso e o draft como true. Quando finalizarmos o pedido o draft mudará para falso e o status para true, E AÍ SIM o pedido vai para a cozinha
+  name String?
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("orders")
+  items Item[]
+}
+
+model Item{
+  id String @id @default(uuid())
+  amount Int
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  order Order @relation(fields: [order_id], references: [id])
+  product Product @relation(fields: [product_id], references: [id])
+
+  @@map("items")
+  order_id String
+  product_id String
+}
