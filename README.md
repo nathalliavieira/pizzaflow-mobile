@@ -56,8 +56,6 @@ Kitchen receives the order and confirms completion
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Expo](https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white)
 
-> ⚠️ Please confirm the tech stack above and adjust if needed (e.g. if Expo is not used).
-
 ---
 
 ## 🔗 Related Repositories
